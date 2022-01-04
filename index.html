@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+</head>
+<style>
+    #name {
+        text-align: center;
+    }
+</style>
+
+<body>
+    <div id="app">
+        <h1 style="text-align: center;">{{title}}</h1>
+        <h1 style="text-align: center;">{{name}}</h1>
+        <div style="text-align: center;">
+            <input v-model="name" type="text" >
+        </div>
+        <div style="text-align: center;margin-top: 10px;">
+            <button v-on:click="changeVal">改变标题</button>
+            <button v-on:click="changeInput">改变input值</button>
+        </div>
+    </div>
+</body>
+<script src="src/dep.js"></script>
+<script src="src/observer.js"></script>
+<script src="src/watcher.js"></script>
+<script src="src/myVue.js"></script>
+<script src="src/compile.js"></script>
+
+<script type="text/javascript">
+    new myVue({
+        el: '#app',
+        data: {
+            title: '标题初始值',
+            name: 'input初始值'
+        },
+        methods: {
+            changeVal: function () {
+                this.title = '新的标题';
+            },
+            changeInput: function(){
+                this.name = "新的input值"
+            }
+        },
+        mounted: function () {
+            window.setTimeout(() => {
+                this.title = '初始化结束了';
+            }, 1000);
+        }
+    });
+</script>
+
+</html>
