@@ -1,5 +1,7 @@
 function Compile(el, vm) {
+    // 可以理解成当前的MyVue实例,vm里面包括data,method等一系列属性
     this.vm = vm;
+    // el是当前的节点，类似Vue项目中index.html设置的id
     this.el = document.querySelector(el);
     this.fragment = null;
     this.init();
@@ -34,8 +36,10 @@ Compile.prototype = {
             var reg = /\{\{(.*)\}\}/;
             var text = node.textContent;
             if (self.isElementNode(node)) {  
+                // 如果是一个元素节点例如<div><p>，处理节点类型
                 self.compile(node);
             } else if (self.isTextNode(node) && reg.test(text)) {
+                // 如果是实际的文字
                 self.compileText(node, reg.exec(text)[1]);
             }
 
@@ -53,9 +57,11 @@ Compile.prototype = {
             if (self.isDirective(attrName)) {
                 var exp = attr.value;
                 var dir = attrName.substring(2);
-                if (self.isEventDirective(dir)) {  // 事件指令
+                // 事件指令 on:
+                if (self.isEventDirective(dir)) {  
                     self.compileEvent(node, self.vm, exp, dir);
                 } else {  // v-model 指令
+
                     self.compileModel(node, self.vm, exp, dir);
                 }
                 node.removeAttribute(attrName);
@@ -66,12 +72,13 @@ Compile.prototype = {
     compileText: function(node, exp) {
         var self = this;
         var initText = this.vm[exp];
+        // 初始值设置，并且为该值添加一个Watcher，以便于当数据变动的时候修改当前文本信息
         this.updateText(node, initText);
         new Watcher(this.vm, exp, function (value) {
             self.updateText(node, value);
         });
     },
-    // v-on:click指令处理
+    // v-on:click指令处理 当设置v-on:click="methodsName"的时候,该node节点上面调用addEventListener('click',vm.methods[exp],false)
     compileEvent: function (node, vm, exp, dir) {
         var eventType = dir.split(':')[1];
         var cb = vm.methods && vm.methods[exp];
