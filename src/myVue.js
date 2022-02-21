@@ -1,4 +1,4 @@
-// 创建自己的Vue实例，该实例的主要目的是将
+// 创建自己的Vue实例，该实例的主要目的是将各个部件连接起来
 function myVue (options) {
     var self = this;
     this.vm = this;
